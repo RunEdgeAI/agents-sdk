@@ -16,8 +16,6 @@
  *     "sample_rate_hz": 16000, "channels": 1
  *   }
  * }
- *
- * Compatibility: also accepts {"type":"image_url", "image_url":{"url":"..."}}
  */
 
 #pragma once
@@ -30,6 +28,50 @@ namespace agents {
  * @brief Media envelope namespace
  */
 namespace media {
+
+/**
+ * @brief Check if a key exists and is a string
+ *
+ * @param j     The JSON object
+ * @param key   The key to check
+ * @return bool true if key exists and is a string, else false
+ */
+bool hasString(const JsonObject& j, const char* key);
+
+/**
+ * @brief Check if a key exists and is an object
+ *
+ * @param j     The JSON object
+ * @param key   The key to check
+ * @return bool true if key exists and is an object, else false
+ */
+bool hasObject(const JsonObject& j, const char* key);
+
+/**
+ * @brief Check if a key exists and is a specific type
+ *
+ * @param j     The JSON object
+ * @param key   The key to check
+ * @param value The type to compare against
+ * @return bool true if key exists and is of the specified type, else false
+ */
+bool eqType(const JsonObject& j, const char* value);
+
+/**
+ * @brief Check if the media type is known
+ *
+ * @param v The media type string
+ * @return bool true if type is known, else false
+ */
+bool isKnownType(const std::string& v);
+
+/**
+ * @brief Check if the media type is known
+ *
+ * @param j The JSON object
+ * @return bool true if type is known, else false
+ */
+bool hasKnownType(const JsonObject& j);
 
 /**
  * @brief Quick probe to see if JSONObject looks like a media envelope (canonical or compatible)
@@ -45,7 +87,7 @@ JsonObject normalizeMediaPart(JsonObject j);
 /**
  * @brief Extract MIME type (returns empty string if not present)
  */
-String getMime(const JsonObject& j);
+std::string getMime(const JsonObject& j);
 
 /**
  * @brief Returns true if the envelope carries a URI reference
@@ -60,12 +102,12 @@ bool hasData(const JsonObject& j);
 /**
  * @brief Best-effort parse of a Data URL to extract MIME type (empty if not parsable)
  */
-String mimeFromDataUrl(const String& data_url);
+std::string mimeFromDataUrl(const std::string& data_url);
 
 /**
  * @brief Parse a string into a media envelope if possible; returns nullopt if not media
  */
-std::optional<JsonObject> tryParseEnvelopeFromString(const String& content);
+std::optional<JsonObject> tryParseEnvelopeFromString(const std::string& content);
 
 /** Media envelope builders **/
 
@@ -74,7 +116,7 @@ std::optional<JsonObject> tryParseEnvelopeFromString(const String& content);
  * @param s The text content
  * @return The media envelope
  */
-inline JsonObject text(const String& s) {
+inline JsonObject text(const std::string& s) {
     return JsonObject{{"type","text"},{"text",s}};
 }
 
@@ -85,7 +127,7 @@ inline JsonObject text(const String& s) {
  * @param meta The image metadata
  * @return The media envelope
  */
-inline JsonObject imageUri(const String& uri, const String& mime, JsonObject meta = {}) {
+inline JsonObject imageUri(const std::string& uri, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","image"},{"mime",mime},{"uri",uri}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -98,7 +140,7 @@ inline JsonObject imageUri(const String& uri, const String& mime, JsonObject met
  * @param meta The image metadata
  * @return The media envelope
  */
-inline JsonObject imageData(const String& base64, const String& mime, JsonObject meta = {}) {
+inline JsonObject imageData(const std::string& base64, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","image"},{"mime",mime},{"data",base64}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -111,7 +153,7 @@ inline JsonObject imageData(const String& base64, const String& mime, JsonObject
  * @param meta The audio metadata
  * @return The media envelope
  */
-inline JsonObject audioUri(const String& uri, const String& mime, JsonObject meta = {}) {
+inline JsonObject audioUri(const std::string& uri, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","audio"},{"mime",mime},{"uri",uri}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -124,7 +166,7 @@ inline JsonObject audioUri(const String& uri, const String& mime, JsonObject met
  * @param meta The audio metadata
  * @return The media envelope
  */
-inline JsonObject audioData(const String& base64, const String& mime, JsonObject meta = {}) {
+inline JsonObject audioData(const std::string& base64, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","audio"},{"mime",mime},{"data",base64}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -137,7 +179,7 @@ inline JsonObject audioData(const String& base64, const String& mime, JsonObject
  * @param meta The video metadata
  * @return The media envelope
  */
-inline JsonObject videoUri(const String& uri, const String& mime, JsonObject meta = {}) {
+inline JsonObject videoUri(const std::string& uri, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","video"},{"mime",mime},{"uri",uri}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -150,7 +192,7 @@ inline JsonObject videoUri(const String& uri, const String& mime, JsonObject met
  * @param meta The video metadata
  * @return The media envelope
  */
-inline JsonObject videoData(const String& base64, const String& mime, JsonObject meta = {}) {
+inline JsonObject videoData(const std::string& base64, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","video"},{"mime",mime},{"data",base64}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -163,7 +205,7 @@ inline JsonObject videoData(const String& base64, const String& mime, JsonObject
  * @param meta The document metadata
  * @return The media envelope
  */
-inline JsonObject documentUri(const String& uri, const String& mime, JsonObject meta = {}) {
+inline JsonObject documentUri(const std::string& uri, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","document"},{"mime",mime},{"uri",uri}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;
@@ -176,7 +218,7 @@ inline JsonObject documentUri(const String& uri, const String& mime, JsonObject 
  * @param meta The document metadata
  * @return The media envelope
  */
-inline JsonObject documentData(const String& base64, const String& mime, JsonObject meta = {}) {
+inline JsonObject documentData(const std::string& base64, const std::string& mime, JsonObject meta = {}) {
     JsonObject j{{"type","document"},{"mime",mime},{"data",base64}};
     if (!meta.empty()) j["meta"] = std::move(meta);
     return j;

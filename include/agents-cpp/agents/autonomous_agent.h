@@ -34,11 +34,11 @@ public:
         /**
          * @brief The description of the step
          */
-        String description;
+        std::string description;
         /**
          * @brief The status of the step
          */
-        String status;
+        std::string status;
         /**
          * @brief The result of the step
          */
@@ -96,7 +96,7 @@ public:
      * @param task The task to run
      * @return The result of the task
      */
-    Task<JsonObject> run(const String& task) override;
+    Task<JsonObject> run(const std::string& task) override;
 
     /**
      * @brief Stop the agent
@@ -107,13 +107,13 @@ public:
      * @brief Provide human feedback
      * @param feedback The feedback
      */
-    void provideFeedback(const String& feedback) override;
+    void provideFeedback(const std::string& feedback) override;
 
     /**
      * @brief Set the agent prompt
      * @param agent_prompt The agent prompt
      */
-    void setAgentPrompt(const String& agent_prompt);
+    void setAgentPrompt(const std::string& agent_prompt);
 
     /**
      * @brief Set the planning strategy
@@ -139,10 +139,10 @@ public:
      * @param context The context
      * @return The feedback
      */
-    Task<String> waitForFeedback(const String& message, const JsonObject& context) override;
+    Task<std::string> waitForFeedback(const std::string& message, const JsonObject& context) override;
 
 private:
-    String agent_prompt_;
+    std::string agent_prompt_;
     PlanningStrategy planning_strategy_ = PlanningStrategy::REACT;
     std::vector<Step> steps_;
     std::function<void(const Step&)> step_callback_;
@@ -153,14 +153,14 @@ private:
     /**
      * @brief Promise for coroutine-based feedback
      */
-    std::promise<String> feedback_promise_;
+    std::promise<std::string> feedback_promise_;
 
     /**
      * @brief Execute the agent's task using coroutines
      * @param task The task to execute
      * @return The result of the task
      */
-    Task<JsonObject> executeTask(const String& task);
+    Task<JsonObject> executeTask(const std::string& task);
 
     /**
      * @brief Execute a step using coroutines
@@ -168,7 +168,7 @@ private:
      * @param context The context
      * @return The result of the step
      */
-    Task<Step> executeStep(String& step_description, JsonObject& context);
+    Task<Step> executeStep(std::string& step_description, JsonObject& context);
 
     /**
      * @brief Record a completed step
@@ -180,42 +180,42 @@ private:
      * @brief Get tool descriptions for prompts
      * @return The tool descriptions
      */
-    String getToolDescriptions() const;
+    std::string getToolDescriptions() const;
 
     /**
      * @brief Plan using Zero Shot
      * @param task The task to plan
      * @return The plan
      */
-    Task<JsonObject> planZeroShot(const String& task);
+    Task<JsonObject> planZeroShot(const std::string& task);
 
     /**
      * @brief Plan using Tree of Thought
      * @param task The task to plan
      * @return The plan
      */
-    Task<JsonObject> planTreeOfThought(const String& task);
+    Task<JsonObject> planTreeOfThought(const std::string& task);
 
     /**
      * @brief Plan and execute
      * @param task The task to plan
      * @return The plan
      */
-    Task<JsonObject> planAndExecute(const String& task);
+    Task<JsonObject> planAndExecute(const std::string& task);
 
     /**
      * @brief Plan using Reflexion
      * @param task The task to plan
      * @return The plan
      */
-    Task<JsonObject> planReflexion(const String& task);
+    Task<JsonObject> planReflexion(const std::string& task);
 
     /**
      * @brief Plan using React
      * @param task The task to plan
      * @return The plan
      */
-    Task<JsonObject> planReact(const String& task);
+    Task<JsonObject> planReact(const std::string& task);
 
     /**
      * @brief Split a string by newlines

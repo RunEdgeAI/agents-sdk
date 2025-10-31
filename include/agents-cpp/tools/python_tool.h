@@ -43,21 +43,21 @@ protected:
      * @param code The Python code to validate
      * @return true if the code is valid, false otherwise
      */
-    bool validatePythonCode(const String& code) const;
+    bool validatePythonCode(const std::string& code) const;
 
     /**
      * @brief Check if the Python code is dangerous
      * @param code The Python code to check
      * @return true if the code is dangerous, false otherwise
      */
-    bool isDangerousPythonCode(const String& code) const;
+    bool isDangerousPythonCode(const std::string& code) const;
 
     /**
      * @brief Execute the Python code
      * @param code The Python code to execute
      * @return ToolResult The result of the Python code execution
      */
-    ToolResult executePythonCode(const String& code) const;
+    ToolResult executePythonCode(const std::string& code) const;
 
     /**
      * @brief Format the Python result
@@ -67,7 +67,7 @@ protected:
      * @param error The error message if the Python code execution was not successful
      * @return ToolResult The formatted result of the Python code execution
      */
-    ToolResult formatPythonResult(const String& code, const String& output, bool success, const String& error = "") const;
+    ToolResult formatPythonResult(const std::string& code, const std::string& output, bool success, const std::string& error = "") const;
 /*! @endcond */
 private:
     /**

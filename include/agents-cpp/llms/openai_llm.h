@@ -24,7 +24,7 @@ public:
      * @param api_key The API key
      * @param model The model to use
      */
-    OpenAILLM(const String& api_key = "", const String& model = "gpt-4o-2024-05-13");
+    OpenAILLM(const std::string& api_key = "", const std::string& model = "gpt-4o-2024-05-13");
     /**
      * @brief Destructor
      */
@@ -34,31 +34,31 @@ public:
      * @brief Get available models from OpenAI
      * @return The available models
      */
-    std::vector<String> getAvailableModels() override;
+    std::vector<std::string> getAvailableModels() override;
 
     /**
      * @brief Set the model to use
      * @param model The model to use
      */
-    void setModel(const String& model) override;
+    void setModel(const std::string& model) override;
 
     /**
      * @brief Get current model
      * @return The current model
      */
-    String getModel() const override;
+    std::string getModel() const override;
 
     /**
      * @brief Set API key
      * @param api_key The API key
      */
-    void setApiKey(const String& api_key) override;
+    void setApiKey(const std::string& api_key) override;
 
     /**
      * @brief Set API base URL (for self-hosted or proxied endpoints)
      * @param api_base The API base URL
      */
-    void setApiBase(const String& api_base) override;
+    void setApiBase(const std::string& api_base) override;
 
     /**
      * @brief Set options for API calls
@@ -77,7 +77,7 @@ public:
      * @param prompt The prompt
      * @return The completion
      */
-    LLMResponse chat(const String& prompt) override;
+    LLMResponse chat(const std::string& prompt) override;
 
     /**
      * @brief Generate completion from a list of messages
@@ -104,13 +104,13 @@ public:
      */
     void streamChat(
         const std::vector<Message>& messages,
-        std::function<void(const String&, bool)> callback
+        std::function<void(const std::string&, bool)> callback
     ) override;
 
 private:
-    String api_key_;
-    String api_base_ = "https://api.openai.com/v1";
-    String model_;
+    std::string api_key_;
+    std::string api_base_ = "https://api.openai.com/v1";
+    std::string model_;
     LLMOptions options_;
 
     /**
@@ -141,7 +141,7 @@ private:
      * @param endpoint The endpoint to use
      * @return The response
      */
-    JsonObject makeApiCall(const JsonObject& request_body, bool stream = false, const String& endpoint = "chat/completions");
+    JsonObject makeApiCall(const JsonObject& request_body, bool stream = false, const std::string& endpoint = "chat/completions");
 
     /**
      * @brief Map media envelope to OpenAI message content

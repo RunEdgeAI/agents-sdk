@@ -22,7 +22,7 @@ Task<int> runAgentApp(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -71,7 +71,7 @@ Task<int> runAgentApp(int argc, char* argv[]) {
     );
 
     // Set up callbacks
-    agent.setStatusCallback([](const String& status) {
+    agent.setStatusCallback([](const std::string& status) {
         Logger::info("Agent status: {}", status);
     });
 
@@ -80,7 +80,7 @@ Task<int> runAgentApp(int argc, char* argv[]) {
 
     // Get user input
     Logger::info("Enter a question or task for the agent (or 'exit' to quit):");
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("> ");
         std::getline(std::cin, user_input);
@@ -98,7 +98,7 @@ Task<int> runAgentApp(int argc, char* argv[]) {
             JsonObject result = co_await agent.run(user_input);
 
             // Display the final result
-            Logger::info("Final Result:\n{}", result["answer"].get<String>());
+            Logger::info("Final Result:\n{}", result["answer"].get<std::string>());
         } catch (const std::exception& e) {
             Logger::error("Error: {}", e.what());
         }

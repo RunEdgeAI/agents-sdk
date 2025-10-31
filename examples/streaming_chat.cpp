@@ -21,7 +21,7 @@ Task<int> runStreamingChat(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -56,7 +56,7 @@ Task<int> runStreamingChat(int argc, char* argv[]) {
 
     // Get user input
     Logger::info("Enter a question or task for the model (or 'exit' to quit):");
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("> ");
         std::getline(std::cin, user_input);
@@ -75,7 +75,7 @@ Task<int> runStreamingChat(int argc, char* argv[]) {
 
             // Display the result as it arrives
             while (auto item = co_await generator.next()) {
-                String chunk = *item;
+                std::string chunk = *item;
                 std::cout << chunk << std::flush;
             }
             std::cout << std::endl;

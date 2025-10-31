@@ -34,8 +34,8 @@ public:
      */
     EvaluatorWorkflow(
         std::shared_ptr<Context> context,
-        const String& optimizer_prompt_template = "",
-        const String& evaluator_prompt_template = ""
+        const std::string& optimizer_prompt_template = "",
+        const std::string& evaluator_prompt_template = ""
     );
 
     /**
@@ -48,13 +48,13 @@ public:
      * @param input The input to execute the workflow with
      * @return The result of the workflow execution
      */
-    JsonObject run(const String& input) override;
+    JsonObject run(const std::string& input) override;
 
     /**
      * @brief Set the evaluation criteria for the evaluator
      * @param criteria The evaluation criteria to set
      */
-    void setEvaluationCriteria(const std::vector<String>& criteria);
+    void setEvaluationCriteria(const std::vector<std::string>& criteria);
 
     /**
      * @brief Set the max number of feedback iterations
@@ -78,37 +78,37 @@ public:
      * @brief Set the optimizer prompt template
      * @param prompt_template The optimizer prompt template to set
      */
-    void setOptimizerPromptTemplate(const String& prompt_template);
+    void setOptimizerPromptTemplate(const std::string& prompt_template);
 
     /**
      * @brief Set the optimizer prompt
      * @param prompt_template The optimizer prompt to set
      */
-    void setOptimizerPrompt(const String& prompt_template) { setOptimizerPromptTemplate(prompt_template); }
+    void setOptimizerPrompt(const std::string& prompt_template) { setOptimizerPromptTemplate(prompt_template); }
 
     /**
      * @brief Set the evaluator prompt template
      * @param prompt_template The evaluator prompt template to set
      */
-    void setEvaluatorPromptTemplate(const String& prompt_template);
+    void setEvaluatorPromptTemplate(const std::string& prompt_template);
 
     /**
      * @brief Set the evaluator prompt
      * @param prompt_template The evaluator prompt to set
      */
-    void setEvaluatorPrompt(const String& prompt_template) { setEvaluatorPromptTemplate(prompt_template); }
+    void setEvaluatorPrompt(const std::string& prompt_template) { setEvaluatorPromptTemplate(prompt_template); }
 
     /**
      * @brief Set the optimizer function
      * @param optimizer The optimizer function to set
      */
-    void setOptimizer(std::function<String(const String&, const JsonObject&)> optimizer);
+    void setOptimizer(std::function<std::string(const std::string&, const JsonObject&)> optimizer);
 
     /**
      * @brief Set the evaluator function
      * @param evaluator The evaluator function to set
      */
-    void setEvaluator(std::function<JsonObject(const String&, const String&)> evaluator);
+    void setEvaluator(std::function<JsonObject(const std::string&, const std::string&)> evaluator);
 
 private:
     /**
@@ -119,13 +119,13 @@ private:
     /**
      * @brief Prompt templates
      */
-    String optimizer_prompt_template_;
-    String evaluator_prompt_template_;
+    std::string optimizer_prompt_template_;
+    std::string evaluator_prompt_template_;
 
     /**
      * @brief Evaluation criteria
      */
-    std::vector<String> evaluation_criteria_;
+    std::vector<std::string> evaluation_criteria_;
 
     /**
      * @brief Max iterations for the feedback loop
@@ -140,29 +140,29 @@ private:
     /**
      * @brief Optimizer function
      */
-    std::function<String(const String&, const JsonObject&)> optimizer_;
+    std::function<std::string(const std::string&, const JsonObject&)> optimizer_;
 
     /**
      * @brief Evaluator function
      * @note This is the function that evaluates the output of the optimizer
      */
-    std::function<JsonObject(const String&, const String&)> evaluator_;
+    std::function<JsonObject(const std::string&, const std::string&)> evaluator_;
 
     /**
      * @brief Default optimizer function
      */
-    String defaultOptimizer(const String& input, const JsonObject& feedback);
+    std::string defaultOptimizer(const std::string& input, const JsonObject& feedback);
 
     /**
      * @brief Default evaluator function
      */
-    JsonObject defaultEvaluator(const String& input, const String& output);
+    JsonObject defaultEvaluator(const std::string& input, const std::string& output);
 
     /**
      * @brief Create the evaluator system prompt with criteria
      * @return The evaluator system prompt
      */
-    String createEvaluatorSystemPrompt() const;
+    std::string createEvaluatorSystemPrompt() const;
 };
 
 } // namespace workflows

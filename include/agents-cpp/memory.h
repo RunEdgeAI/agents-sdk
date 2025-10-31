@@ -33,7 +33,7 @@ public:
      * @param value The value to add
      * @param type The type of memory to add
      */
-    virtual void add(const String& key, const JsonObject& value, MemoryType type = MemoryType::SHORT_TERM) = 0;
+    virtual void add(const std::string& key, const JsonObject& value, MemoryType type = MemoryType::SHORT_TERM) = 0;
 
     /**
      * @brief Get a memory entry by key
@@ -41,7 +41,7 @@ public:
      * @param type The type of memory to get
      * @return The memory entry
      */
-    virtual std::optional<JsonObject> get(const String& key, MemoryType type = MemoryType::SHORT_TERM) const = 0;
+    virtual std::optional<JsonObject> get(const std::string& key, MemoryType type = MemoryType::SHORT_TERM) const = 0;
 
     /**
      * @brief Check if a memory entry exists
@@ -49,14 +49,14 @@ public:
      * @param type The type of memory to check
      * @return true if exists, otherwise false
      */
-    virtual bool has(const String& key, MemoryType type = MemoryType::SHORT_TERM) const = 0;
+    virtual bool has(const std::string& key, MemoryType type = MemoryType::SHORT_TERM) const = 0;
 
     /**
      * @brief Remove a memory entry
      * @param key The key to remove
      * @param type The type of memory to remove
      */
-    virtual void remove(const String& key, MemoryType type = MemoryType::SHORT_TERM) = 0;
+    virtual void remove(const std::string& key, MemoryType type = MemoryType::SHORT_TERM) = 0;
 
     /**
      * @brief Clear all memory of a specific type
@@ -81,7 +81,7 @@ public:
      * @param max_length The maximum length of the summary
      * @return The conversation summary
      */
-    virtual String getConversationSummary(int max_length = 0) const = 0;
+    virtual std::string getConversationSummary(int max_length = 0) const = 0;
 
     /**
      * @brief Get conversation history as a JSON object
@@ -97,7 +97,7 @@ public:
      * @return The search results
      */
     virtual std::vector<std::pair<JsonObject, float>> search(
-        const String& query,
+        const std::string& query,
         MemoryType type = MemoryType::LONG_TERM,
         int max_results = 5
     ) const = 0;

@@ -32,12 +32,12 @@ public:
         /**
          * @brief Name of the step
          */
-        String name;
+        std::string name;
 
         /**
          * @brief Prompt template for this step
          */
-        String prompt_template;
+        std::string prompt_template;
 
         /**
          * @brief Function to validate step output (returns true if valid)
@@ -62,8 +62,8 @@ public:
          * @param transformer The transformer function for the step
          */
         Step(
-            const String& name,
-            const String& prompt_template,
+            const std::string& name,
+            const std::string& prompt_template,
             std::function<bool(const JsonObject&)> validator = nullptr,
             std::function<JsonObject(const JsonObject&)> transformer = nullptr
         ) : name(name), prompt_template(prompt_template),
@@ -95,8 +95,8 @@ public:
      * @param transformer The transformer function for the step
      */
     void addStep(
-        const String& name,
-        const String& prompt_template,
+        const std::string& name,
+        const std::string& prompt_template,
         std::function<bool(const JsonObject&)> validator = nullptr,
         std::function<JsonObject(const JsonObject&)> transformer = nullptr
     );
@@ -106,7 +106,7 @@ public:
      * @param input The input to execute the workflow with
      * @return The result of the workflow execution
      */
-    JsonObject run(const String& input) override;
+    JsonObject run(const std::string& input) override;
 
     /**
      * @brief Execute the workflow using the latest USER message from context memory

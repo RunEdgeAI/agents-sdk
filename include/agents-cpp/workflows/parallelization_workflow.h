@@ -49,11 +49,11 @@ public:
         /**
          * @brief The name of the task
          */
-        String name;
+        std::string name;
         /**
          * @brief The prompt template of the task
          */
-        String prompt_template;
+        std::string prompt_template;
         /**
          * @brief The context of the task
          */
@@ -61,11 +61,11 @@ public:
         /**
          * @brief The prompt function of the task
          */
-        std::function<String(const String&)> prompt_fn;
+        std::function<std::string(const std::string&)> prompt_fn;
         /**
          * @brief The result parser of the task
          */
-        std::function<JsonObject(const String&)> result_parser;
+        std::function<JsonObject(const std::string&)> result_parser;
 
         /**
          * @brief Constructor
@@ -76,11 +76,11 @@ public:
          * @param result_parser The result parser of the task
          */
         Task(
-            const String& name,
-            const String& prompt_template,
+            const std::string& name,
+            const std::string& prompt_template,
             const JsonObject& context = JsonObject(),
-            std::function<String(const String&)> prompt_fn = nullptr,
-            std::function<JsonObject(const String&)> result_parser = nullptr
+            std::function<std::string(const std::string&)> prompt_fn = nullptr,
+            std::function<JsonObject(const std::string&)> result_parser = nullptr
         ) : name(name), prompt_template(prompt_template), context(context), prompt_fn(prompt_fn), result_parser(result_parser) {}
     };
 
@@ -112,8 +112,8 @@ public:
      * @param context The context of the task
      */
     void addTask(
-        const String& name,
-        const String& prompt_template,
+        const std::string& name,
+        const std::string& prompt_template,
         const JsonObject& context = JsonObject()
     );
 
@@ -126,10 +126,10 @@ public:
      * @param context The context of the task
      */
     void addTask(
-        const String& name,
-        const String& prompt_template,
-        std::function<String(const String&)> prompt_fn,
-        std::function<JsonObject(const String&)> result_parser,
+        const std::string& name,
+        const std::string& prompt_template,
+        std::function<std::string(const std::string&)> prompt_fn,
+        std::function<JsonObject(const std::string&)> result_parser,
         const JsonObject& context = JsonObject()
     );
 
@@ -161,7 +161,7 @@ public:
      * @param input The input to the workflow
      * @return The output of the workflow
      */
-    JsonObject run(const String& input) override;
+    JsonObject run(const std::string& input) override;
 
     /**
      * @brief Execute using the latest USER message from context memory
@@ -200,7 +200,7 @@ private:
      * @param input The input to the workflow
      * @return The output of the workflow
      */
-    std::vector<JsonObject> runTasksInParallel(const String& input);
+    std::vector<JsonObject> runTasksInParallel(const std::string& input);
 
     /**
      * @brief Default aggregator for sectioning strategy

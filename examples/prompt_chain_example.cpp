@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -71,11 +71,11 @@ int main(int argc, char* argv[]) {
         "Check if it covers all important aspects of the topic and has a logical flow. Outline: {context}",
         // Validator: check if the outline is approved
         [](const JsonObject& result) -> bool {
-            String response = result["response"].get<String>();
+            std::string response = result["response"].get<std::string>();
             // For testing, accept any response that contains "outline" or "step"
-            return response.find("approved") != String::npos ||
-                   response.find("looks good") != String::npos ||
-                   response.find("comprehensive") != String::npos;
+            return response.find("approved") != std::string::npos ||
+                   response.find("looks good") != std::string::npos ||
+                   response.find("comprehensive") != std::string::npos;
         }
     );
 
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
     );
 
     // Set a callback for intermediate steps
-    chain.setStepCallback([](const String& step_name, const JsonObject& result) {
+    chain.setStepCallback([](const std::string& step_name, const JsonObject& result) {
         Logger::debug("Step result: {}", result.dump(2));
         Logger::info("Completed step: {}", step_name);
         Logger::info("--------------------------------------");
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
     // Get user input
     Logger::info("Enter a topic for document generation:");
-    String user_input;
+    std::string user_input;
     std::getline(std::cin, user_input);
 
     if (user_input == "exit" || user_input == "quit" || user_input == "q") {
@@ -116,9 +116,9 @@ int main(int argc, char* argv[]) {
 
         // Display the final document
         if (result.contains("proofread") && result["proofread"].contains("response")) {
-            Logger::info("\nFinal Document:\n{}", result["proofread"]["response"].get<String>());
+            Logger::info("\nFinal Document:\n{}", result["proofread"]["response"].get<std::string>());
         } else if (result.contains("response")) {
-            Logger::info("\nFinal Document:\n{}", result["response"].get<String>());
+            Logger::info("\nFinal Document:\n{}", result["response"].get<std::string>());
         } else {
             Logger::info("\nFinal Result:\n{}", result.dump());
         }

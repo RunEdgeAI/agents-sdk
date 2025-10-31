@@ -1,6 +1,6 @@
 /**
  * @file context.h
- * @brief Agent Context Definition
+ * @brief Context Definition
  * @version 0.1
  * @date 2025-07-20
  *
@@ -13,6 +13,7 @@
 #include <agents-cpp/llm_interface.h>
 #include <agents-cpp/memory.h>
 #include <agents-cpp/tool.h>
+#include <agents-cpp/tools/tool_registry.h>
 #include <agents-cpp/types.h>
 #include <map>
 #include <memory>
@@ -56,13 +57,19 @@ public:
      * @brief Set the system prompt
      * @param system_prompt The system prompt to use
      */
-    void setSystemPrompt(const String& system_prompt);
+    void setSystemPrompt(const std::string& system_prompt);
 
     /**
      * @brief Get the system prompt
      * @return The system prompt
      */
-    const String& getSystemPrompt() const;
+    const std::string& getSystemPrompt() const;
+
+    /**
+     * @brief Register tools from a ToolRegistry
+     * @param registry The ToolRegistry to register from
+     */
+    void registerToolRegistry(tools::ToolRegistry& registry);
 
     /**
      * @brief Register a tool
@@ -75,7 +82,7 @@ public:
      * @param name The name of the tool to get
      * @return Pointer to tool
      */
-    std::shared_ptr<Tool> getTool(const String& name) const;
+    std::shared_ptr<Tool> getTool(const std::string& name) const;
 
     /**
      * @brief Get all tools
@@ -89,7 +96,7 @@ public:
      * @param params The parameters to pass to the tool
      * @return The result of the tool execution
      */
-    Task<ToolResult> executeTool(const String& name, const JsonObject& params);
+    Task<ToolResult> executeTool(const std::string& name, const JsonObject& params);
 
     /**
      * @brief Get the memory
@@ -110,41 +117,28 @@ public:
     std::vector<Message> getMessages() const;
 
     /**
-     * @brief Run a chat completion with the current context using coroutines
+     * @brief Multimodal chat completion with the current context
      * @param user_message The user message to send
+     * @param uris_or_data Optional URIs or data to use
      * @return The LLM response
      */
-    Task<LLMResponse> chat(const String& user_message);
+    Task<LLMResponse> chat(const std::string user_message, const std::vector<std::string> uris_or_data = {});
 
     /**
-     * @brief Run a chat completion with tools using coroutines
+     * @brief Multimodal chat completion with tools
      * @param user_message The user message to send
+     * @param uris_or_data Optional URIs or data to use
      * @return The LLM response
      */
-    Task<LLMResponse> chatWithTools(const String& user_message);
+    Task<LLMResponse> chatWithTools(const std::string user_message, const std::vector<std::string> uris_or_data = {});
 
     /**
-     * @brief Stream chat results with AsyncGenerator
+     * @brief Multimodal streaming chat (accepts one or more media URIs or data strings)
      * @param user_message The user message to send
+     * @param uris_or_data Optional URIs or data to use
      * @return The LLM response
      */
-    AsyncGenerator<String> streamChat(const String& user_message);
-
-    /**
-     * @brief Unified multimodal chat (accepts one or more media URIs or data strings)
-     * @param user_message The user message to send to the LLM
-     * @param uris_or_data The URIs or data to use
-     * @return The LLM response
-     */
-    Task<LLMResponse> chatMultiModal(const String& user_message, const std::vector<String>& uris_or_data);
-
-    /**
-     * @brief Unified multimodal streaming chat (accepts one or more media URIs or data strings)
-     * @param user_message The user message to send to the LLM
-     * @param uris_or_data The URIs or data to use
-     * @return The LLM response
-     */
-    AsyncGenerator<String> streamChatMultiModal(const String user_message, const std::vector<String> uris_or_data);
+    AsyncGenerator<std::string> streamChat(const std::string user_message, const std::vector<std::string> uris_or_data = {});
 
 private:
     /**
@@ -160,12 +154,12 @@ private:
     /**
      * @brief The tools to use
      */
-    std::map<String, std::shared_ptr<Tool>> tools_;
+    std::map<std::string, std::shared_ptr<Tool>> tools_;
 
     /**
      * @brief The system prompt to use
      */
-    String system_prompt_;
+    std::string system_prompt_;
 
     /**
      * @brief Build message from multimodal parts
@@ -173,7 +167,7 @@ private:
      * @param uris_or_data The URIs or data to use
      * @return The message
      */
-    Message buildMultimodalParts(const String& prompt, const std::vector<String>& uris_or_data);
+    Message buildMultimodalParts(const std::string& prompt, const std::vector<std::string>& uris_or_data);
 };
 
 } // namespace agents

@@ -28,7 +28,7 @@ public:
      * @param api_key The API key
      * @param model The model to use
      */
-    AnthropicLLM(const String& api_key = "", const String& model = "claude-3-5-sonnet-20240620");
+    AnthropicLLM(const std::string& api_key = "", const std::string& model = "claude-3-5-sonnet-20240620");
     /**
      * @brief Destructor
      */
@@ -38,31 +38,31 @@ public:
      * @brief Get available models from Anthropic
      * @return The available models
      */
-    std::vector<String> getAvailableModels() override;
+    std::vector<std::string> getAvailableModels() override;
 
     /**
      * @brief Set the model to use
      * @param model The model to use
      */
-    void setModel(const String& model) override;
+    void setModel(const std::string& model) override;
 
     /**
      * @brief Get current model
      * @return The current model
      */
-    String getModel() const override;
+    std::string getModel() const override;
 
     /**
      * @brief Set API key
      * @param api_key The API key
      */
-    void setApiKey(const String& api_key) override;
+    void setApiKey(const std::string& api_key) override;
 
     /**
      * @brief Set API base URL (for self-hosted or proxied endpoints)
      * @param api_base The API base URL
      */
-    void setApiBase(const String& api_base) override;
+    void setApiBase(const std::string& api_base) override;
 
     /**
      * @brief Set options for API calls
@@ -81,7 +81,7 @@ public:
      * @param prompt The prompt
      * @return The completion
      */
-    LLMResponse chat(const String& prompt) override;
+    LLMResponse chat(const std::string& prompt) override;
 
     /**
      * @brief Generate completion from a list of messages
@@ -108,13 +108,13 @@ public:
      */
     void streamChat(
         const std::vector<Message>& messages,
-        std::function<void(const String&, bool)> callback
+        std::function<void(const std::string&, bool)> callback
     ) override;
 
 private:
-    String api_key_;
-    String api_base_ = "https://api.anthropic.com";
-    String model_;
+    std::string api_key_;
+    std::string api_base_ = "https://api.anthropic.com";
+    std::string model_;
     LLMOptions options_;
 
     /**

@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     Logger::setLevel(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment

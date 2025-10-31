@@ -21,7 +21,7 @@ using namespace agents::workflows;
 ToolResult calculatorTool(const JsonObject& params) {
     try {
         if (params.contains("expression")) {
-            String expr = params["expression"];
+            std::string expr = params["expression"];
             // Very simple calculator for demo purposes
             // In a real-world scenario, you'd use a proper expression evaluator
             double result = 0.0;
@@ -51,7 +51,7 @@ ToolResult calculatorTool(const JsonObject& params) {
     } catch (const std::exception& e) {
         return {
             false,
-            "Error calculating result: " + String(e.what()),
+            "Error calculating result: " + std::string(e.what()),
             {{"error", e.what()}}
         };
     }
@@ -61,10 +61,10 @@ ToolResult calculatorTool(const JsonObject& params) {
 ToolResult weatherTool(const JsonObject& params) {
     try {
         if (params.contains("location")) {
-            String location = params["location"];
+            std::string location = params["location"];
 
             // Just a dummy implementation for demo purposes
-            String weather = "sunny";
+            std::string weather = "sunny";
             double temperature = 22.0;
 
             return {
@@ -86,7 +86,7 @@ ToolResult weatherTool(const JsonObject& params) {
     } catch (const std::exception& e) {
         return {
             false,
-            "Error getting weather: " + String(e.what()),
+            "Error getting weather: " + std::string(e.what()),
             {{"error", e.what()}}
         };
     }
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
     Logger::setLevel(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -225,7 +225,7 @@ int main(int argc, char* argv[]) {
         agent->setOptions(agent_options);
 
         // Register status callback
-        agent->setStatusCallback([](const String& status) {
+        agent->setStatusCallback([](const std::string& status) {
             Logger::info("Agent status: {}", status);
         });
 
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
         agent->init();
 
         // Run the agent with multiple tasks
-        std::vector<String> tasks = {
+        std::vector<std::string> tasks = {
             "What is 1+1?",
             "What's the weather like in New York?",
             "Tell me a short story about a robot learning to feel emotions."

@@ -45,7 +45,7 @@ protected:
      * @param lang The language to search in
      * @return ToolResult The result of the Wikipedia search
      */
-    ToolResult searchWikipedia(const String& query, int limit, const String& lang) const;
+    ToolResult searchWikipedia(const std::string& query, int limit, const std::string& lang) const;
 
     /**
      * @brief Fetch page details
@@ -53,7 +53,7 @@ protected:
      * @param lang The language to fetch details in
      * @return ToolResult The result of the page details fetch
      */
-    ToolResult fetchPageDetails(const std::vector<String>& page_ids, const String& lang) const;
+    ToolResult fetchPageDetails(const std::vector<std::string>& page_ids, const std::string& lang) const;
 
     /**
      * @brief Format the results
@@ -63,7 +63,7 @@ protected:
      * @param page_details The details of the Wikipedia pages
      * @return ToolResult The formatted results
      */
-    ToolResult formatResults(const String& query, const String& lang,
+    ToolResult formatResults(const std::string& query, const std::string& lang,
                            const ToolResult& search_results, const ToolResult& page_details) const;
 /*! @endcond */
 };

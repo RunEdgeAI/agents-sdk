@@ -16,16 +16,16 @@
 
 using namespace agents;
 
-Task<int> runmultimodalExample(String media_path) {
+Task<int> runmultimodalExample(std::string media_path) {
     // Initialize logger
     Logger::init(Logger::Level::INFO);
 
     auto& config = ConfigLoader::getInstance();
 
     // Choose provider here
-    String provider = "google";
-    String model = "gemini-2.5-flash";
-    String api_key = config.get("GEMINI_API_KEY");
+    std::string provider = "google";
+    std::string model = "gemini-2.5-flash-lite";
+    std::string api_key = config.get("GEMINI_API_KEY");
 
     if (api_key.empty()) {
         std::cerr << "GEMINI_API_KEY not set.\n";
@@ -48,7 +48,6 @@ Task<int> runmultimodalExample(String media_path) {
 
     // Register tools
     context->registerTool(tools::createMediaLoaderTool(llm));
-    context->registerTool(tools::createSummarizationTool(llm));
 
     // Set the system prompt
     context->setSystemPrompt(
@@ -58,10 +57,10 @@ Task<int> runmultimodalExample(String media_path) {
     );
 
     // Lambda for printing result stream to console
-    auto printStream = [&](AsyncGenerator<String>& generator) -> Task<void> {
+    auto printStream = [&](AsyncGenerator<std::string>& generator) -> Task<void> {
         // Display the result as it arrives
         while (auto item = co_await generator.next()) {
-            String chunk = *item;
+            std::string chunk = *item;
             std::cout << chunk << std::flush;
         }
         std::cout << std::endl << std::endl;
@@ -73,28 +72,28 @@ Task<int> runmultimodalExample(String media_path) {
     // For example: "data:image/png;base64,AAAA..."
     try {
         // Example 0: Multimodal Chat With Document
-        auto doc_resp = context->streamChatMultiModal(
+        auto doc_resp = context->streamChat(
             "Describe what is in this document.",
             { "file://" + media_path + "/docs/resume.pdf" }
         );
         co_await printStream(doc_resp);
 
         // Example 1: Multimodal Chat With Audio
-        auto audio_resp = context->streamChatMultiModal(
+        auto audio_resp = context->streamChat(
             "Describe what is in this audio.",
             { "file://" + media_path + "/audio/sample.mp3" }
         );
         co_await printStream(audio_resp);
 
         // Example 2: Multimodal Chat With Video
-        auto video_resp = context->streamChatMultiModal(
+        auto video_resp = context->streamChat(
             "Describe what is this video about.",
             { "file://" + media_path + "/video/sample_video.mp4" }
         );
         co_await printStream(video_resp);
 
         // Example 3: Multimodal Chat With Multiple Images
-        auto image_resp = context->streamChatMultiModal(
+        auto image_resp = context->streamChat(
             "Describe what is happening in these images.",
             {
                 "https://i.ytimg.com/vi/Eb4ICVPOUlI/hqdefault.jpg",
@@ -105,7 +104,7 @@ Task<int> runmultimodalExample(String media_path) {
         co_await printStream(image_resp);
 
         // Optionally ask quesions about the content
-        String user_input;
+        std::string user_input;
         while (true) {
             Logger::info("Enter questions about the content (type 'exit', 'quit' or 'q' to stop):");
             Logger::info("> ");
@@ -136,5 +135,5 @@ int main(int argc, char**argv) {
         Logger::error("Usage: ./multimodal_example <absolute_path_to_media_dir>");
         return EXIT_FAILURE;
     }
-    return blockingWait(runmultimodalExample(String(argv[1])));
+    return blockingWait(runmultimodalExample(std::string(argv[1])));
 }

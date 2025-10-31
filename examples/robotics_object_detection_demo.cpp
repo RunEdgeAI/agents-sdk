@@ -15,16 +15,16 @@
 
 using namespace agents;
 
-Task<int> runRoboticsObjectDetectionDemo(String media_path) {
+Task<int> runRoboticsObjectDetectionDemo(std::string media_path) {
     // Initialize logger
     Logger::init(Logger::Level::INFO);
 
     auto& config = ConfigLoader::getInstance();
 
     // Use Google Gemini for robotics capabilities
-    String provider = "google";
-    String model = "gemini-2.5-flash"; // Can also use gemini-robotics-er-1.5-preview when available
-    String api_key = config.get("GEMINI_API_KEY");
+    std::string provider = "google";
+    std::string model = "gemini-2.5-flash"; // Can also use gemini-robotics-er-1.5-preview when available
+    std::string api_key = config.get("GEMINI_API_KEY");
 
     if (api_key.empty()) {
         Logger::error("GEMINI_API_KEY not set.");
@@ -61,7 +61,7 @@ Task<int> runRoboticsObjectDetectionDemo(String media_path) {
         Logger::info("=== Robotics Object Detection Demo ===");
         Logger::info("Detecting objects and providing 2D coordinates...");
 
-        String robotics_prompt = R"(
+        std::string robotics_prompt = R"(
 Point to no more than 10 items in the image. The label returned
 should be an identifying name for the object detected.
 The answer should follow the json format: [{"point": [y, x], "label": "<label1>"}, ...].
@@ -69,7 +69,7 @@ The points are in [y, x] format normalized to 0-1000.
         )";
 
         // Use a sample image - replace with your robotics scene image
-        auto object_detection_resp = co_await context->chatMultiModal(
+        auto object_detection_resp = co_await context->chatWithTools(
             robotics_prompt,
             { "file://" + media_path + "/scenes/synthetic_table.png" }
         );
@@ -81,12 +81,12 @@ The points are in [y, x] format normalized to 0-1000.
         Logger::info("\n=== Object Finding Demo ===");
         Logger::info("Finding specific objects based on natural language commands...");
 
-        String find_prompt = R"(
+        std::string find_prompt = R"(
 Find the banana in the image. Return the coordinates and label in JSON format:
 [{"point": [y, x], "label": "banana"}]
         )";
 
-        auto find_resp = co_await context->chatMultiModal(
+        auto find_resp = co_await context->chatWithTools(
             find_prompt,
             { "file://" + media_path + "/scenes/synthetic_table.png" }
         );
@@ -98,7 +98,7 @@ Find the banana in the image. Return the coordinates and label in JSON format:
         Logger::info("\n=== Object Detection & Bounding Boxes Demo ===");
         Logger::info("Analyzing scene for objects and their bounding boxes...");
 
-        String bounding_boxes_prompt = R"(
+        std::string bounding_boxes_prompt = R"(
 Analyze objects in this scene and return bounding boxes as a JSON array with labels.
 Never return masks or code fencing. Limit to 25 objects. Include as many objects as you
 can identify on the table.
@@ -109,7 +109,7 @@ The format should be as follows: [{"box_2d": [ymin, xmin, ymax, xmax],
 box_2d must only be integers
         )";
 
-        auto bounding_boxes_resp = co_await context->chatMultiModal(
+        auto bounding_boxes_resp = co_await context->chatWithTools(
             bounding_boxes_prompt,
             { "file://" + media_path + "/scenes/synthetic_table.png" }
         );
@@ -121,7 +121,7 @@ box_2d must only be integers
         Logger::info("\n=== Scene Understanding Demo ===");
         Logger::info("Analyzing scene for robotic manipulation...");
 
-        String scene_prompt = R"(
+        std::string scene_prompt = R"(
 Analyze this scene for robotic manipulation. Identify:
 1. A few graspable objects with their coordinates
 2. Potential obstacles or hazards
@@ -131,7 +131,7 @@ Analyze this scene for robotic manipulation. Identify:
 Return results in JSON format with categories and coordinates.
         )";
 
-        auto scene_resp = co_await context->chatMultiModal(
+        auto scene_resp = co_await context->chatWithTools(
             scene_prompt,
             { "file://" + media_path + "/scenes/synthetic_table.png" }
         );
@@ -153,5 +153,5 @@ int main(int argc, char**argv) {
         Logger::error("Usage: ./robotics_object_detection_demo <absolute_path_to_media_dir>");
         return EXIT_FAILURE;
     }
-    return blockingWait(runRoboticsObjectDetectionDemo(String(argv[1])));
+    return blockingWait(runRoboticsObjectDetectionDemo(std::string(argv[1])));
 }

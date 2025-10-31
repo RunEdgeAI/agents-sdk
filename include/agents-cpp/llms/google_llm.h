@@ -24,7 +24,7 @@ public:
      * @param api_key The API key
      * @param model The model to use
      */
-    GoogleLLM(const String& api_key = "", const String& model = "gemini-1.5-pro");
+    GoogleLLM(const std::string& api_key = "", const std::string& model = "gemini-1.5-pro");
     /**
      * @brief Destructor
      */
@@ -34,31 +34,31 @@ public:
      * @brief Get available models from Google
      * @return The available models
      */
-    std::vector<String> getAvailableModels() override;
+    std::vector<std::string> getAvailableModels() override;
 
     /**
      * @brief Set the model to use
      * @param model The model to use
      */
-    void setModel(const String& model) override;
+    void setModel(const std::string& model) override;
 
     /**
      * @brief Get current model
      * @return The current model
      */
-    String getModel() const override;
+    std::string getModel() const override;
 
     /**
      * @brief Set API key
      * @param api_key The API key
      */
-    void setApiKey(const String& api_key) override;
+    void setApiKey(const std::string& api_key) override;
 
     /**
      * @brief Set API base URL (for self-hosted or proxied endpoints)
      * @param api_base The API base URL
      */
-    void setApiBase(const String& api_base) override;
+    void setApiBase(const std::string& api_base) override;
 
     /**
      * @brief Set options for API calls
@@ -77,7 +77,7 @@ public:
      * @param prompt The prompt
      * @return The completion
      */
-    LLMResponse chat(const String& prompt) override;
+    LLMResponse chat(const std::string& prompt) override;
 
     /**
      * @brief Generate completion from a list of messages
@@ -104,7 +104,7 @@ public:
      */
     void streamChat(
         const std::vector<Message>& messages,
-        std::function<void(const String&, bool)> callback
+        std::function<void(const std::string&, bool)> callback
     ) override;
 
     /**
@@ -115,12 +115,12 @@ public:
      * @param binary Optional binary content of the media file
      * @return Optional envelope; std::nullopt if unsupported
      */
-    std::optional<JsonObject> uploadMediaFile(const String& local_path, const String& mime, const String& binary = "") override;
+    std::optional<JsonObject> uploadMediaFile(const std::string& local_path, const std::string& mime, const std::string& binary = "") override;
 
 private:
-    String api_key_;
-    String api_base_ = "https://generativelanguage.googleapis.com/v1";
-    String model_;
+    std::string api_key_;
+    std::string api_base_ = "https://generativelanguage.googleapis.com/v1";
+    std::string model_;
     LLMOptions options_;
 
     /**
@@ -151,7 +151,7 @@ private:
      * @brief Get the endpoint URL based on the model
      * @return The endpoint URL
      */
-    String getEndpoint() const;
+    std::string getEndpoint() const;
 
     /**
      * @brief Map media envelope to Google parts array
@@ -169,7 +169,7 @@ private:
      * @param display_name The display name
      * @return The resumable session
      */
-    String startResumableSession(const String& api_key, int64_t content_length, const String& mime, const String& display_name) const;
+    std::string startResumableSession(const std::string& api_key, int64_t content_length, const std::string& mime, const std::string& display_name) const;
 
     /**
      * @brief Upload bytes to the resumable session
@@ -178,7 +178,7 @@ private:
      * @param content_length The content length
      * @return The response
      */
-    JsonObject uploadBytesFinalize(const String& upload_url, const String& data, int64_t content_length) const;
+    JsonObject uploadBytesFinalize(const std::string& upload_url, const std::string& data, int64_t content_length) const;
 };
 
 } // namespace llms

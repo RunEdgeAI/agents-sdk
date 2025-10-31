@@ -55,9 +55,9 @@ struct AudioFormat {
  * through the provider_options map.
  */
 struct LiveSessionConfig {
-    String model;  ///< Model name (provider-specific format)
+    std::string model;  ///< Model name (provider-specific format)
 
-    String system_instruction = "You are a helpful assistant and answer in a friendly tone.";  ///< System instruction to steer the assistant
+    std::string system_instruction = "You are a helpful assistant and answer in a friendly tone.";  ///< System instruction to steer the assistant
 
     TransportProtocol preferred_transport = TransportProtocol::WEBSOCKET;  ///< Preferred transport protocol
 
@@ -68,7 +68,7 @@ struct LiveSessionConfig {
     int keepalive_interval_ms = 30000;    ///< Keepalive interval in milliseconds
     bool auto_reconnect = true;           ///< Auto-reconnect on disconnect
 
-    std::map<String, String> provider_options;  ///< Provider-specific options (key-value pairs)
+    std::map<std::string, std::string> provider_options;  ///< Provider-specific options (key-value pairs)
 };
 
 /**
@@ -91,14 +91,14 @@ public:
      */
     struct Callbacks {
         std::function<void(const void* samples, size_t num_samples, const AudioFormat& format)> on_audio_frame;  ///< Audio output callback
-        std::function<void(const String& text)> on_text;  ///< Text output callback (transcription, responses)
+        std::function<void(const std::string& text)> on_text;  ///< Text output callback (transcription, responses)
         std::function<void()> on_turn_complete;  ///< Turn completion callback
         std::function<void()> on_connected;  ///< Connection established callback
         std::function<void()> on_disconnected;  ///< Connection lost callback
-        std::function<void(const String& reason)> on_connection_failed;  ///< Connection failed callback
-        std::function<void(const String& event_type, const String& data)> on_session_event;  ///< Session events callback
-        std::function<void(const String& function_name, const String& arguments)> on_function_call;  ///< Function calls callback
-        std::function<void(const String& error)> on_error;  ///< Error callback
+        std::function<void(const std::string& reason)> on_connection_failed;  ///< Connection failed callback
+        std::function<void(const std::string& event_type, const std::string& data)> on_session_event;  ///< Session events callback
+        std::function<void(const std::string& function_name, const std::string& arguments)> on_function_call;  ///< Function calls callback
+        std::function<void(const std::string& error)> on_error;  ///< Error callback
     };
 
     /**
@@ -130,7 +130,7 @@ public:
      * @param config Configuration for the live session
      * @return The created client
      */
-    static std::unique_ptr<ILiveClient> create(const String& api_key, const LiveSessionConfig& config) {
+    static std::unique_ptr<ILiveClient> create(const std::string& api_key, const LiveSessionConfig& config) {
         // Default implementation - to be overridden by concrete classes
         return nullptr;
     }
@@ -161,7 +161,7 @@ public:
      * @param use_case Use case description ("performance", "compatibility", "reliability")
      * @return TransportProtocol Recommended protocol
      */
-    static TransportProtocol getRecommendedProtocol(const String& use_case = "general") {
+    static TransportProtocol getRecommendedProtocol(const std::string& use_case = "general") {
         auto supported = getSupportedProtocols();
         if (supported.empty()) return TransportProtocol::WEBSOCKET;
 
@@ -225,7 +225,7 @@ public:
      * @param text Text message
      * @return bool True if successful
      */
-    virtual bool sendText(const String& text) = 0;
+    virtual bool sendText(const std::string& text) = 0;
 
     /**
      * @brief Signal completion of the current turn
@@ -264,7 +264,7 @@ public:
      * @param text User message text
      * @return bool True if successful
      */
-    virtual bool sendMessage(const String& text) {
+    virtual bool sendMessage(const std::string& text) {
         if (!sendText(text)) return false;
         return sendTurnComplete();
     }

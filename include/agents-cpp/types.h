@@ -21,18 +21,6 @@
 namespace agents {
 
 /**
- * @brief String type
- * @note This is a string type. It contains the string.
- */
-using String = std::string;
-
-/**
- * @brief String map type
- * @note This is a string map type. It contains the string and string.
- */
-using StringMap = std::map<String, String>;
-
-/**
  * @brief JSON object type
  * @note This is a JSON object type. It contains the JSON object.
  */
@@ -52,15 +40,15 @@ struct Parameter {
     /**
      * @brief The name of the parameter
      */
-    String name;
+    std::string name;
     /**
      * @brief The description of the parameter
      */
-    String description;
+    std::string description;
     /**
      * @brief The type of the parameter
      */
-    String type;
+    std::string type;
     /**
      * @brief Whether the parameter is required
      */
@@ -75,7 +63,7 @@ struct Parameter {
  * @brief Parameter map type
  * @note This is a parameter map type. It contains the string and parameter.
  */
-using ParameterMap = std::map<String, Parameter>;
+using ParameterMap = std::map<std::string, Parameter>;
 
 /**
  * @brief Response from an LLM
@@ -86,15 +74,15 @@ struct LLMResponse {
     /**
      * @brief The content of the response
      */
-    String content;
+    std::string content;
     /**
      * @brief The tool calls that were made
      */
-    std::vector<std::pair<String, JsonObject>> tool_calls;
+    std::vector<std::pair<std::string, JsonObject>> tool_calls;
     /**
      * @brief The usage metrics for the call
      */
-    std::map<String, double> usage_metrics;
+    std::map<std::string, double> usage_metrics;
 };
 
 /**
@@ -132,19 +120,19 @@ struct Message {
     /**
      * @brief The content of the message
      */
-    String content;
+    std::string content;
     /**
      * @brief The name of the message
      */
-    std::optional<String> name = std::nullopt;
+    std::optional<std::string> name = std::nullopt;
     /**
      * @brief The tool call id of the message
      */
-    std::optional<String> tool_call_id = std::nullopt;
+    std::optional<std::string> tool_call_id = std::nullopt;
     /**
      * @brief The tool calls that were made
      */
-    std::vector<std::pair<String, JsonObject>> tool_calls = {};
+    std::vector<std::pair<std::string, JsonObject>> tool_calls = {};
 };
 
 /**

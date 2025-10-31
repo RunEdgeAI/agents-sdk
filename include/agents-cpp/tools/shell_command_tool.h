@@ -43,29 +43,21 @@ protected:
      * @param command The command to validate
      * @return true if the command is valid, false otherwise
      */
-    bool validateCommand(const String& command) const;
+    bool validateCommand(const std::string& command) const;
 
     /**
      * @brief Check if the command is dangerous
      * @param command The command to check
      * @return true if the command is dangerous, false otherwise
      */
-    bool isDangerousCommand(const String& command) const;
+    bool isDangerousCommand(const std::string& command) const;
 
     /**
      * @brief Execute the command
      * @param command The command to execute
-     * @return int The exit code of the command
+     * @return ToolResult The result of the command execution
      */
-    int executeCommand(const String& command) const;
-
-    /**
-     * @brief Format the command result
-     * @param command The command that was executed
-     * @param exitCode The exit code of the command
-     * @return ToolResult The formatted result of the command execution
-     */
-    ToolResult formatCommandResult(const String& command, int exitCode) const;
+    ToolResult executeCommand(const std::string& command) const;
 /*! @endcond */
 };
 

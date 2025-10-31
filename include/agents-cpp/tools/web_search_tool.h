@@ -38,14 +38,14 @@ private:
      * @param query The query to search for
      * @return ToolResult The result of the web search
      */
-    ToolResult performWebSearch(const String& query) const;
+    ToolResult performWebSearch(const std::string& query) const;
 
     /**
      * @brief Perform a SerpApi search
      * @param query The query to search for
      * @return ToolResult The result of the SerpApi search
      */
-    ToolResult performSerpApiSearch(const String& query) const;
+    ToolResult performSerpApiSearch(const std::string& query) const;
 
     // Security validation
     /**
@@ -53,7 +53,7 @@ private:
      * @param query The query to check
      * @return true if the query is dangerous, false otherwise
      */
-    bool isDangerousQuery(const String& query) const;
+    bool isDangerousQuery(const std::string& query) const;
 
     /**
      * @brief Poll for results when receiving a 202 Accepted response
@@ -62,7 +62,7 @@ private:
      * @param source The search source (SerpApi)
      * @return ToolResult The final result after polling
      */
-    ToolResult pollForResults(const String& query, const JsonObject& initialResponse, const String& source) const;
+    ToolResult pollForResults(const std::string& query, const JsonObject& initialResponse, const std::string& source) const;
 
     /**
      * @brief Process SerpApi search results after polling
@@ -71,7 +71,7 @@ private:
      * @param statusCode The HTTP status code
      * @return ToolResult The processed results
      */
-    ToolResult processSerpApiResults(const String& query, const JsonObject& responseJson, int statusCode) const;
+    ToolResult processSerpApiResults(const std::string& query, const JsonObject& responseJson, int statusCode) const;
 };
 
 } // namespace tools

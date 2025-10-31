@@ -43,14 +43,14 @@ protected:
      * @param filePath The file path to validate
      * @return true if the file path is valid, false otherwise
      */
-    bool validateFilePath(const String& filePath) const;
+    bool validateFilePath(const std::string& filePath) const;
 
     /**
      * @brief Check if the file is accessible
      * @param filePath The file path to check
      * @return true if the file is accessible, false otherwise
      */
-    bool checkFileAccessibility(const String& filePath) const;
+    bool checkFileAccessibility(const std::string& filePath) const;
 
     /**
      * @brief Check the size of the file
@@ -58,14 +58,14 @@ protected:
      * @param fileSize The size of the file
      * @return true if the file size is valid, false otherwise
      */
-    bool checkFileSize(const String& filePath, std::streamsize& fileSize) const;
+    bool checkFileSize(const std::string& filePath, std::streamsize& fileSize) const;
 
     /**
      * @brief Read the content of the file
      * @param filePath The file path to read
      * @return The content of the file
      */
-    String readFileContent(const String& filePath) const;
+    std::string readFileContent(const std::string& filePath) const;
 
     /**
      * @brief Format the file read result
@@ -74,7 +74,7 @@ protected:
      * @param fileSize The size of the file
      * @return ToolResult The result of the file read tool
      */
-    ToolResult formatFileReadResult(const String& filePath, const String& content, std::streamsize fileSize) const;
+    ToolResult formatFileReadResult(const std::string& filePath, const std::string& content, std::streamsize fileSize) const;
 /*! @endcond */
 };
 
@@ -108,21 +108,21 @@ protected:
      * @param filePath The file path to validate
      * @return true if the file path is valid, false otherwise
      */
-    bool validateFilePath(const String& filePath) const;
+    bool validateFilePath(const std::string& filePath) const;
 
     /**
      * @brief Validate the content
      * @param content The content to validate
      * @return true if the content is valid, false otherwise
      */
-    bool validateContent(const String& content) const;
+    bool validateContent(const std::string& content) const;
 
     /**
      * @brief Ensure the directory exists
      * @param filePath The file path to ensure the directory exists
      * @return true if the directory exists, false otherwise
      */
-    bool ensureDirectoryExists(const String& filePath) const;
+    bool ensureDirectoryExists(const std::string& filePath) const;
 
     /**
      * @brief Write the content to the file
@@ -130,7 +130,7 @@ protected:
      * @param content The content to write to the file
      * @return true if the content is written to the file, false otherwise
      */
-    bool writeFileContent(const String& filePath, const String& content) const;
+    bool writeFileContent(const std::string& filePath, const std::string& content) const;
 
     /**
      * @brief Verify the file write
@@ -138,7 +138,7 @@ protected:
      * @param writtenSize The size of the content written to the file
      * @return true if the file write is verified, false otherwise
      */
-    bool verifyFileWrite(const String& filePath, std::streamsize& writtenSize) const;
+    bool verifyFileWrite(const std::string& filePath, std::streamsize& writtenSize) const;
 
     /**
      * @brief Format the file write result
@@ -147,7 +147,7 @@ protected:
      * @param writtenSize The size of the content written to the file
      * @return ToolResult The result of the file write tool
      */
-    ToolResult formatFileWriteResult(const String& filePath, const String& content, std::streamsize writtenSize) const;
+    ToolResult formatFileWriteResult(const std::string& filePath, const std::string& content, std::streamsize writtenSize) const;
 /*! @endcond */
 };
 

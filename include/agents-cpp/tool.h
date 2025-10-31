@@ -27,7 +27,7 @@ struct ToolResult {
     /**
      * @brief The content of the tool result
      */
-    String content;
+    std::string content;
     /**
      * @brief The data of the tool result
      */
@@ -53,7 +53,7 @@ public:
      * @param name The name of the tool
      * @param description The description of the tool
      */
-    Tool(const String& name, const String& description);
+    Tool(const std::string& name, const std::string& description);
 
     /**
      * @brief Destructor
@@ -64,13 +64,13 @@ public:
      * @brief Get the name of the tool
      * @return The name of the tool
      */
-    const String& getName() const;
+    const std::string& getName() const;
 
     /**
      * @brief Get the description of the tool
      * @return The description of the tool
      */
-    const String& getDescription() const;
+    const std::string& getDescription() const;
 
     /**
      * @brief Get the parameters of the tool
@@ -115,11 +115,11 @@ protected:
     /**
      * @brief The name of the tool
      */
-    String name_;
+    std::string name_;
     /**
      * @brief The description of the tool
      */
-    String description_;
+    std::string description_;
     /**
      * @brief The parameters of the tool
      */
@@ -149,8 +149,8 @@ protected:
  * @return A shared pointer to the tool
  */
 std::shared_ptr<Tool> createTool(
-    const String& name,
-    const String& description,
+    const std::string& name,
+    const std::string& description,
     const std::vector<Parameter>& parameters,
     ToolCallback callback
 );

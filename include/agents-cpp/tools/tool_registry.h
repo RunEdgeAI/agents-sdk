@@ -47,7 +47,7 @@ public:
      * @param name The name of the tool
      * @return The tool
      */
-    std::shared_ptr<Tool> getTool(const String& name) const;
+    std::shared_ptr<Tool> getTool(const std::string& name) const;
 
     /**
      * @brief Get all registered tools
@@ -60,13 +60,13 @@ public:
      * @param name The name of the tool
      * @return True if the tool is registered, false otherwise
      */
-    bool hasTool(const String& name) const;
+    bool hasTool(const std::string& name) const;
 
     /**
      * @brief Remove a tool
      * @param name The name of the tool
      */
-    void removeTool(const String& name);
+    void removeTool(const std::string& name);
 
     /**
      * @brief Clear all tools
@@ -86,15 +86,16 @@ public:
     static ToolRegistry& global();
 
 private:
-    std::map<String, std::shared_ptr<Tool>> tools_;
+    std::map<std::string, std::shared_ptr<Tool>> tools_;
 };
 
 /**
  * @brief Create and register standard tools
  *
  * @param registry The tool registry to register tools with
+ * @param llm Optional LLM interface for tools that require it
  */
-void registerStandardTools(ToolRegistry& registry);
+void registerStandardTools(ToolRegistry& registry, std::shared_ptr<LLMInterface> llm = nullptr);
 
 /**
  * @brief Creates a tool for executing shell commands
@@ -152,6 +153,13 @@ std::shared_ptr<Tool> createSummarizationTool(std::shared_ptr<LLMInterface> llm)
  * @return Pointer to tool
  */
 std::shared_ptr<Tool> createMediaLoaderTool(std::shared_ptr<LLMInterface> llm);
+
+/**
+ * @brief Creates a tool for generating safe responses
+ *
+ * @return Pointer to tool
+ */
+std::shared_ptr<Tool> createRespondTool();
 
 } // namespace tools
 } // namespace agents

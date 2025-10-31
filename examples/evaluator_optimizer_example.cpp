@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
     workflow.setMinimumAcceptableScore(0.85);
 
     // Set custom evaluator and optimizer functions (optional)
-    workflow.setEvaluator([](const String& input, const String& output) -> JsonObject {
+    workflow.setEvaluator([](const std::string& input, const std::string& output) -> JsonObject {
         // This is a custom evaluator function that would normally implement
         // specialized evaluation logic, but here we'll let the default LLM-based
         // evaluator do the work by returning an empty result
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
         return JsonObject();
     });
 
-    workflow.setOptimizer([](const String& input, const JsonObject& feedback) -> String {
+    workflow.setOptimizer([](const std::string& input, const JsonObject& feedback) -> std::string {
         // This is a custom optimizer function that would normally implement
         // specialized optimization logic, but here we'll let the default LLM-based
         // optimizer do the work by returning an empty string
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 
     // Process user inputs until exit
     std::cout << "Enter queries (or 'exit' to quit):" << std::endl;
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("> ");
         std::getline(std::cin, user_input);
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 
             // Display the final result
             Logger::info("\nFinal Response:");
-            Logger::info("{}", result["final_response"].get<String>());
+            Logger::info("{}", result["final_response"].get<std::string>());
 
             // Display evaluation information
             Logger::info("\nEvaluation Information:");
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
                 Logger::info("\nEvaluation History:");
                 for (const auto& eval : result["evaluations"]) {
                     Logger::info("Iteration {}: Score = {}", eval["iteration"].get<int>(), eval["score"].get<double>());
-                    Logger::info("Feedback: {}", eval["feedback"].get<String>());
+                    Logger::info("Feedback: {}", eval["feedback"].get<std::string>());
                     Logger::info("----------");
                 }
             }

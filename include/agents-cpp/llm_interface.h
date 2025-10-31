@@ -50,7 +50,7 @@ struct LLMOptions {
     /**
      * @brief The stop sequences of the LLM
      */
-    std::vector<String> stop_sequences;
+    std::vector<std::string> stop_sequences;
     /**
      * @brief Response schema for structured output (JSON schema)
      */
@@ -59,7 +59,7 @@ struct LLMOptions {
      * @brief Response MIME type for structured output
      * @note Use "application/json" for JSON output, "text/x.enum" for enum output
      */
-    std::optional<String> response_mime_type;
+    std::optional<std::string> response_mime_type;
 };
 
 /**
@@ -76,31 +76,31 @@ public:
      * @brief Get available models from this provider
      * @return The available models
      */
-    virtual std::vector<String> getAvailableModels() = 0;
+    virtual std::vector<std::string> getAvailableModels() = 0;
 
     /**
      * @brief Set the model to use
      * @param model The model to use
      */
-    virtual void setModel(const String& model) = 0;
+    virtual void setModel(const std::string& model) = 0;
 
     /**
      * @brief Get current model
      * @return The current model
      */
-    virtual String getModel() const = 0;
+    virtual std::string getModel() const = 0;
 
     /**
      * @brief Set API key
      * @param api_key The API key to use
      */
-    virtual void setApiKey(const String& api_key) = 0;
+    virtual void setApiKey(const std::string& api_key) = 0;
 
     /**
      * @brief Set API base URL (for self-hosted or proxied endpoints)
      * @param api_base The API base URL to use
      */
-    virtual void setApiBase(const String& api_base) = 0;
+    virtual void setApiBase(const std::string& api_base) = 0;
 
     /**
      * @brief Set options for API calls
@@ -119,7 +119,7 @@ public:
      * @param prompt The prompt
      * @return The completion
      */
-    virtual LLMResponse chat(const String& prompt) = 0;
+    virtual LLMResponse chat(const std::string& prompt) = 0;
 
     /**
      * @brief Generate completion from a list of messages
@@ -146,7 +146,7 @@ public:
      */
     virtual void streamChat(
         const std::vector<Message>& messages,
-        std::function<void(const String&, bool)> callback
+        std::function<void(const std::string&, bool)> callback
     ) = 0;
 
     /**
@@ -173,7 +173,7 @@ public:
      * @param tools The tools to use
      * @return The AsyncGenerator of response chunks
      */
-    virtual AsyncGenerator<String> streamChatAsync(
+    virtual AsyncGenerator<std::string> streamChatAsync(
         const std::vector<Message>& messages,
         const std::vector<std::shared_ptr<Tool>>& tools
     );
@@ -186,7 +186,7 @@ public:
      * @param binary Optional binary content of the media file
      * @return Optional envelope; std::nullopt if unsupported
      */
-    virtual std::optional<JsonObject> uploadMediaFile(const String& local_path, const String& mime, const String& binary = "");
+    virtual std::optional<JsonObject> uploadMediaFile(const std::string& local_path, const std::string& mime, const std::string& binary = "");
 };
 
 /**
@@ -198,9 +198,9 @@ public:
  * @return The LLMInterface
  */
 std::shared_ptr<LLMInterface> createLLM(
-    const String& provider,
-    const String& api_key,
-    const String& model = ""
+    const std::string& provider,
+    const std::string& api_key,
+    const std::string& model = ""
 );
 
 } // namespace agents

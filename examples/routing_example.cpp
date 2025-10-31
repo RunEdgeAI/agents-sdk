@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create LLM
-    auto llm = createLLM("google", api_key, "gemini-1.5-flash");
+    auto llm = createLLM("google", api_key, "gemini-2.5-flash");
 
     // Configure LLM options
     LLMOptions options;
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
     router.addRoute(
         "factual_query",
         "Questions about facts, events, statistics, or general knowledge",
-        [context](const String& input, const JsonObject& routing_info) -> JsonObject {
+        [context](const std::string& input, const JsonObject& routing_info) -> JsonObject {
             Logger::debug("Routing info: {}", routing_info.dump(2));
             Logger::info("Handling factual query: {}", input);
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     router.addRoute(
         "opinion_query",
         "Questions seeking opinions, evaluations, or judgments on topics",
-        [context](const String& input, const JsonObject& routing_info) -> JsonObject {
+        [context](const std::string& input, const JsonObject& routing_info) -> JsonObject {
             Logger::debug("Routing info: {}", routing_info.dump(2));
             Logger::info("Handling opinion query: {}", input);
 
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 
             // Get response from LLM
             LLMResponse llm_response = opinion_context->getLLM()->chat(input);
-            String response = llm_response.content;
+            std::string response = llm_response.content;
 
             JsonObject result;
             result["answer"] = "Opinion analysis: " + response;
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
     router.addRoute(
         "technical_query",
         "Questions about technical topics, programming, or specialized domains",
-        [context](const String& input, const JsonObject& routing_info) -> JsonObject {
+        [context](const std::string& input, const JsonObject& routing_info) -> JsonObject {
             Logger::debug("Routing info: {}", routing_info.dump(2));
             Logger::info("Handling technical query: {}", input);
 
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 
             // Get response from LLM
             LLMResponse llm_response = technical_context->getLLM()->chat(input);
-            String response = llm_response.content;
+            std::string response = llm_response.content;
 
             JsonObject result;
             result["answer"] = "Technical explanation: " + response;
@@ -134,13 +134,13 @@ int main(int argc, char* argv[]) {
     );
 
     // Set default route
-    router.setDefaultRoute([context](const String& input, const JsonObject& routing_info) -> JsonObject {
+    router.setDefaultRoute([context](const std::string& input, const JsonObject& routing_info) -> JsonObject {
         Logger::debug("Routing info: {}", routing_info.dump(2));
         Logger::info("Handling with default route: {}", input);
 
         // Get response from LLM
         LLMResponse llm_response = context->getLLM()->chat(input);
-        String response = llm_response.content;
+        std::string response = llm_response.content;
 
         JsonObject result;
         result["answer"] = "General response: " + response;
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
 
     // Process user inputs until exit
     Logger::info("Enter queries (or 'exit' to quit):");
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("> ");
         std::getline(std::cin, user_input);
@@ -167,7 +167,7 @@ int main(int argc, char* argv[]) {
             JsonObject result = router.run(user_input);
 
             // Display the result
-            Logger::info("\nResponse: {}", result["answer"].get<String>());
+            Logger::info("\nResponse: {}", result["answer"].get<std::string>());
             Logger::info("--------------------------------------");
         } catch (const std::exception& e) {
             Logger::error("Error: {}", e.what());

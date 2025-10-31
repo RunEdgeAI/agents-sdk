@@ -81,7 +81,7 @@ public:
          * @param modifications Output parameter for human modifications
          * @return Whether the step was approved
          */
-        std::function<bool(const String&, const JsonObject&, String&)> human_in_the_loop;
+        std::function<bool(const std::string&, const JsonObject&, std::string&)> human_in_the_loop;
     };
 
     /**
@@ -105,14 +105,14 @@ public:
      * @param task The task to run
      * @return The result of the task
      */
-    virtual Task<JsonObject> run(const String& task) = 0;
+    virtual Task<JsonObject> run(const std::string& task) = 0;
 
     /**
      * @brief Run the agent with a callback
      * @param task The task to run
      * @param callback The callback to run
      */
-    void runAsync(const String& task, std::function<void(const JsonObject&)> callback);
+    void runAsync(const std::string& task, std::function<void(const JsonObject&)> callback);
 
     /**
      * @brief Stop the agent
@@ -147,13 +147,13 @@ public:
      * @brief Set a callback for status updates
      * @param callback The callback to set
      */
-    void setStatusCallback(std::function<void(const String&)> callback);
+    void setStatusCallback(std::function<void(const std::string&)> callback);
 
     /**
      * @brief Provide human feedback
      * @param feedback The feedback to provide
      */
-    virtual void provideFeedback(const String& feedback);
+    virtual void provideFeedback(const std::string& feedback);
 
     /**
      * @brief Wait for feedback using coroutines
@@ -161,8 +161,8 @@ public:
      * @param context The context to wait for feedback
      * @return The feedback
      */
-    virtual Task<String> waitForFeedback(
-        const String& message,
+    virtual Task<std::string> waitForFeedback(
+        const std::string& message,
         const JsonObject& context
     ) {
         (void)message;
@@ -192,7 +192,7 @@ protected:
      * @brief The agent status callback
      * @note This is a callback for status updates
      */
-    std::function<void(const String&)> status_callback_;
+    std::function<void(const std::string&)> status_callback_;
 
     /**
      * @brief Update the agent's state
@@ -204,7 +204,7 @@ protected:
      * @brief Log a status message
      * @param status The status to log
      */
-    void logStatus(const String& status);
+    void logStatus(const std::string& status);
 /*! @endcond */
 };
 

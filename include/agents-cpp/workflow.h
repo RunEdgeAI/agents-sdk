@@ -45,7 +45,7 @@ public:
      * @param input The user input
      * @return The result
      */
-    virtual JsonObject run(const String& input) = 0;
+    virtual JsonObject run(const std::string& input) = 0;
 
     /**
      * @brief Run the workflow with a user input asynchronously
@@ -53,7 +53,7 @@ public:
      * @param callback The callback
      */
     virtual void runAsync(
-        const String& input,
+        const std::string& input,
         std::function<void(const JsonObject&)> callback
     );
 
@@ -67,7 +67,7 @@ public:
      * @brief Set a callback for intermediate steps
      * @param callback The callback
      */
-    void setStepCallback(std::function<void(const String&, const JsonObject&)> callback);
+    void setStepCallback(std::function<void(const std::string&, const JsonObject&)> callback);
 
     /**
      * @brief Set maximum number of steps
@@ -91,7 +91,7 @@ protected:
     /**
      * @brief The step callback
      */
-    std::function<void(const String&, const JsonObject&)> step_callback_;
+    std::function<void(const std::string&, const JsonObject&)> step_callback_;
 
     /**
      * @brief The maximum number of steps
@@ -103,7 +103,7 @@ protected:
      * @param description The description
      * @param result The result
      */
-    void logStep(const String& description, const JsonObject& result);
+    void logStep(const std::string& description, const JsonObject& result);
 /*! @endcond */
 };
 

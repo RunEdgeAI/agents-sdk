@@ -3,7 +3,7 @@
 
 ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
 ![macOS](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0)
-
+![Windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white)
 
 **Agents-SDK** is a **portable, high-performance C++ framework** for building **on-device, agentic AI systems** — think **LangChain for the edge**. This SDK is purpose-built for developers who want to create **local-first AI agents** that can reason, plan, and act without relying on the cloud.
 
@@ -85,7 +85,7 @@ You can configure API keys and other settings in three ways:
    ```bash
    export OPENAI_API_KEY=your_api_key_here
    export ANTHROPIC_API_KEY=your_api_key_here
-   export SERPAPI_KEY=your_api_key_here
+   export WEBSEARCH_API_KEY=your_api_key_here
    ```
 
 3. Passing API keys as command-line arguments (not recommended for production):
@@ -129,7 +129,7 @@ int main() {
     JsonObject result = agent.run("Research the latest developments in quantum computing");
 
     // Access the result
-    std::cout << result["answer"].get<String>() << std::endl;
+    std::cout << result["answer"].get<std::string>() << std::endl;
 
     return 0;
 }
@@ -261,7 +261,7 @@ auto custom_tool = createTool(
         {"expression", "The expression to evaluate", "string", true}
     },
     [](const JsonObject& params) -> ToolResult {
-        String expr = params["expression"];
+        std::string expr = params["expression"];
         // Implement calculation logic here
         double result = evaluate(expr);
         return ToolResult{
@@ -285,7 +285,7 @@ public:
     CustomWorkflow(std::shared_ptr<Context> context)
         : Workflow(context) {}
 
-    JsonObject run(const String& input) override {
+    JsonObject run(const std::string& input) override {
         // Implement your custom workflow logic here
     }
 };

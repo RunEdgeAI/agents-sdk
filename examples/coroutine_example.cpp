@@ -29,7 +29,7 @@ void stepCallback(const AutonomousAgent::Step& step) {
 }
 
 // Simple callback for human-in-the-loop
-bool humanApproval(const String& message, const JsonObject& context, String& modifications) {
+bool humanApproval(const std::string& message, const JsonObject& context, std::string& modifications) {
     (void)modifications;
     if (!context.empty()) {
         Logger::info("Context: {}", context.dump(2));
@@ -42,7 +42,7 @@ bool humanApproval(const String& message, const JsonObject& context, String& mod
 }
 
 // Example coroutine that performs a multi-step task using tools
-Task<JsonObject> performResearchTask(std::shared_ptr<Context> context, const String& topic) {
+Task<JsonObject> performResearchTask(std::shared_ptr<Context> context, const std::string& topic) {
     Logger::info("Starting research on topic: {}", topic);
 
     // Perform a search to get initial information
@@ -80,17 +80,17 @@ Task<JsonObject> performResearchTask(std::shared_ptr<Context> context, const Str
 }
 
 // Example coroutine that generates content in parallel
-Task<JsonObject> generateContentInParallel(std::shared_ptr<Context> context, const String& topic) {
+Task<JsonObject> generateContentInParallel(std::shared_ptr<Context> context, const std::string& topic) {
     Logger::info("Generating content for topic: {}", topic);
 
     // Create a prompt for the introduction
-    String intro_prompt = "Write an introduction paragraph for an article about " + topic + ".";
+    std::string intro_prompt = "Write an introduction paragraph for an article about " + topic + ".";
 
     // Create a prompt for the main body
-    String body_prompt = "Write three key points about " + topic + " with detailed explanations.";
+    std::string body_prompt = "Write three key points about " + topic + " with detailed explanations.";
 
     // Create a prompt for the conclusion
-    String conclusion_prompt = "Write a conclusion paragraph for an article about " + topic + ".";
+    std::string conclusion_prompt = "Write a conclusion paragraph for an article about " + topic + ".";
 
     // Launch all tasks concurrently
     auto intro_task = context->chat(intro_prompt);
@@ -103,10 +103,10 @@ Task<JsonObject> generateContentInParallel(std::shared_ptr<Context> context, con
     auto conclusion_response = co_await std::move(conclusion_task);
 
     // Now we have all the pieces, combine them
-    String article = intro_response.content + "\n\n" + body_response.content + "\n\n" + conclusion_response.content;
+    std::string article = intro_response.content + "\n\n" + body_response.content + "\n\n" + conclusion_response.content;
 
     // Create a prompt for a title
-    String title_prompt = "Create a catchy title for this article:\n\n" + article;
+    std::string title_prompt = "Create a catchy title for this article:\n\n" + article;
     auto title_response = co_await context->chat(title_prompt);
 
     // Return the complete article
@@ -123,7 +123,7 @@ Task<JsonObject> generateContentInParallel(std::shared_ptr<Context> context, con
 }
 
 // Example showing streaming text with coroutines
-Task<void> streamText(std::shared_ptr<Context> context, const String& prompt) {
+Task<void> streamText(std::shared_ptr<Context> context, const std::string& prompt) {
     Logger::info("Streaming response for prompt: {}", prompt);
 
     // Get a streaming generator
@@ -133,7 +133,7 @@ Task<void> streamText(std::shared_ptr<Context> context, const String& prompt) {
 
     // Process each chunk as it arrives
     while (auto item = co_await generator.next()) {
-        String chunk = *item;
+        std::string chunk = *item;
         std::cout << chunk << std::flush;
     }
     std::cout << std::endl;
@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -237,7 +237,7 @@ int main(int argc, char* argv[]) {
 
                     // Display result
                     if (result.contains("answer")) {
-                        Logger::info("\nFinal Answer: {}", result["answer"].get<String>());
+                        Logger::info("\nFinal Answer: {}", result["answer"].get<std::string>());
                     } else {
                         Logger::info("\nResult: {}", result.dump(2));
                     }
@@ -247,15 +247,15 @@ int main(int argc, char* argv[]) {
                     // Example 2: Research task with parallel tool use
                     Logger::info("Performing research with coroutines");
                     auto result = blockingWait(performResearchTask(context, topic));
-                    Logger::info("\nResearch Summary: {}", result["summary"].get<String>());
+                    Logger::info("\nResearch Summary: {}", result["summary"].get<std::string>());
                     break;
                 }
                 case 3: {
                     // Example 3: Generate content in parallel
                     Logger::info("Generating content in parallel");
                     auto result = blockingWait(generateContentInParallel(context, topic));
-                    Logger::info("\nTitle: {}", result["title"].get<String>());
-                    Logger::info("\nFull Article:\n{}", result["full_article"].get<String>());
+                    Logger::info("\nTitle: {}", result["title"].get<std::string>());
+                    Logger::info("\nFull Article:\n{}", result["full_article"].get<std::string>());
                     break;
                 }
                 case 4: {

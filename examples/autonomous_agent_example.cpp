@@ -33,7 +33,7 @@ void detailedStepCallback(const AutonomousAgent::Step& step) {
 }
 
 // Custom callback for human-in-the-loop
-bool detailedHumanApproval(const String& message, const JsonObject& context, String& modifications) {
+bool detailedHumanApproval(const std::string& message, const JsonObject& context, std::string& modifications) {
     if (!context.empty()) {
         Logger::info("\nContext Information:");
         Logger::info("{}", context.dump(2));
@@ -48,7 +48,7 @@ bool detailedHumanApproval(const String& message, const JsonObject& context, Str
 
     if (response == 'm' || response == 'M') {
         Logger::info("Enter your modifications or instructions: ");
-        String user_modifications;
+        std::string user_modifications;
         std::getline(std::cin, user_modifications);
 
         // Set modifications output parameter
@@ -79,33 +79,20 @@ int main() {
     auto& config = ConfigLoader::getInstance();
 
     // Proceed based on provider choice and API key in the environment
-    if (provider_choice == 1) {
-        bool hasOpenAI = config.has("OPENAI_API_KEY");
-        if (hasOpenAI) {
-            llm = createLLM("openai", config.get("OPENAI_API_KEY"), "gpt-4o-2024-05-13");
+    try {
+        if (provider_choice == 1) {
+            llm = createLLM("openai", config.get("OPENAI_API_KEY"), "gpt-4o");
+        } else if (provider_choice == 2) {
+            llm = createLLM("anthropic", config.get("ANTHROPIC_API_KEY"), "claude-sonnet-4-5");
+        } else if (provider_choice == 3) {
+            llm = createLLM("google", config.get("GEMINI_API_KEY"), "gemini-2.5-flash");
         } else {
-            Logger::error("OPENAI_API_KEY not found in environment.");
+            Logger::error("Invalid provider choice.");
             return EXIT_FAILURE;
         }
-    } else if (provider_choice == 2) {
-        // Note: This assumes the user has the Anthropic API key in the environment
-        bool hasAnthropic = config.has("ANTHROPIC_API_KEY");
-        if (hasAnthropic) {
-            llm = createLLM("anthropic", config.get("ANTHROPIC_API_KEY"), "claude-3-5-sonnet-20240620");
-        } else {
-            Logger::error("ANTHROPIC_API_KEY not found in environment.");
-            return EXIT_FAILURE;
-        }
-    } else if (provider_choice == 3) {
-        bool hasGoogle = config.has("GEMINI_API_KEY");
-        if (hasGoogle) {
-            llm = createLLM("google", config.get("GEMINI_API_KEY"), "gemini-2.0-flash");
-        } else {
-            Logger::error("GEMINI_API_KEY not found in environment.");
-            return EXIT_FAILURE;
-        }
-    } else {
-        Logger::error("Invalid provider choice.");
+    } catch (const std::exception& e) {
+        Logger::error("Error creating LLM: {}", e.what());
+        Logger::error("Please ensure the appropriate API key is set in the environment.");
         return EXIT_FAILURE;
     }
 
@@ -121,17 +108,15 @@ int main() {
 
     // Set system prompt for the context
     context->setSystemPrompt(
-        "You are a helpful, autonomous assistant with access to tools."
-        "You can use these tools to accomplish tasks for the user."
+        "You are a helpful, autonomous assistant with access to tools. "
+        "You can use these tools to accomplish tasks for the user. "
         "Think step by step and be thorough in your approach."
     );
 
-    // Register tools
-    context->registerTool(tools::createWebSearchTool());
-    context->registerTool(tools::createWikipediaTool());
-    // Uncomment when tools are implemented
-    // context->registerTool(tools::createWeatherTool());
-    // context->registerTool(tools::createCalculatorTool());
+    // Register tools from tool registry
+    auto registry = tools::ToolRegistry::global();
+    tools::registerStandardTools(registry, llm);
+    context->registerToolRegistry(registry);
 
     // Create a custom tool
     auto summarize_tool = createTool(
@@ -142,7 +127,7 @@ int main() {
             {"max_length", "Maximum length of summary in words", "integer", false}
         },
         [context](const JsonObject& params) -> ToolResult {
-            String text = params["text"];
+            std::string text = params["text"];
             int max_length = params.contains("max_length") ? params["max_length"].get<int>() : 100;
 
             // Create a specific context for summarization
@@ -152,11 +137,11 @@ int main() {
                 "that capture the main points of the provided text."
             );
 
-            String prompt = "Summarize the following text in no more than " +
+            std::string prompt = "Summarize the following text in no more than " +
                             std::to_string(max_length) + " words:\n\n" + text;
 
             LLMResponse llm_response = summary_context->getLLM()->chat(prompt);
-            String summary = llm_response.content;
+            std::string summary = llm_response.content;
 
             return ToolResult{
                 true,
@@ -182,12 +167,15 @@ int main() {
     // Set planning strategy based on user choice
     AutonomousAgent::PlanningStrategy strategy;
     switch (strategy_choice) {
+        case 1:
+            strategy = AutonomousAgent::PlanningStrategy::REACT;
+            break;
         case 2:
             strategy = AutonomousAgent::PlanningStrategy::PLAN_AND_EXECUTE;
             break;
-        case 1:
         default:
-            strategy = AutonomousAgent::PlanningStrategy::REACT;
+            Logger::error("Invalid strategy choice.");
+            return EXIT_FAILURE;
     }
     agent.setPlanningStrategy(strategy);
 
@@ -228,7 +216,7 @@ int main() {
     Logger::info("==================================================");
     Logger::info("Enter a question or task for the agent (or 'exit' to quit):");
 
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("\n> ");
         std::getline(std::cin, user_input);
@@ -256,7 +244,7 @@ int main() {
             Logger::info("\n==================================================");
             Logger::info("                  FINAL RESULT                    ");
             Logger::info("==================================================");
-            Logger::info("{}", result["answer"].get<String>());
+            Logger::info("{}", result["answer"].get<std::string>());
 
             // Display completion statistics
             Logger::info("\n--------------------------------------------------");

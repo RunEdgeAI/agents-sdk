@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     Logger::init(Logger::Level::INFO);
 
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -112,13 +112,13 @@ int main(int argc, char* argv[]) {
     // Set custom synthesizer
     orchestrator.setSynthesizer([](const std::vector<JsonObject>& worker_results) -> JsonObject {
         JsonObject final_result;
-        String combined_output = "# Comprehensive Report\n\n";
+        std::string combined_output = "# Comprehensive Report\n\n";
 
         // Extract each worker's contribution
         for (const auto& result : worker_results) {
             if (result.contains("worker_name") && result.contains("output")) {
-                String worker_name = result["worker_name"].get<String>();
-                String output = result["output"].get<String>();
+                std::string worker_name = result["worker_name"].get<std::string>();
+                std::string output = result["output"].get<std::string>();
 
                 combined_output += "## " + worker_name + "'s Contribution\n\n";
                 combined_output += output + "\n\n";
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 
     // Process user inputs until exit
     std::cout << "Enter complex tasks (or 'exit' to quit):" << std::endl;
-    String user_input;
+    std::string user_input;
     while (true) {
         Logger::info("> ");
         std::getline(std::cin, user_input);
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
             JsonObject result = orchestrator.run(user_input);
 
             // Display the result
-            Logger::info("Final Result:\n{}", result["answer"].get<String>());
+            Logger::info("Final Result:\n{}", result["answer"].get<std::string>());
             Logger::info("--------------------------------------");
         } catch (const std::exception& e) {
             Logger::error("Error: {}", e.what());

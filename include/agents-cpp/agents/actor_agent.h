@@ -47,7 +47,7 @@ public:
      * @param task The task to run
      * @return The result of the task
      */
-    Task<JsonObject> run(const String& task) override;
+    Task<JsonObject> run(const std::string& task) override;
 
     /**
      * @brief Stop the agent
@@ -58,19 +58,19 @@ public:
      * @brief Provide human feedback
      * @param feedback The feedback to provide
      */
-    void provideFeedback(const String& feedback) override;
+    void provideFeedback(const std::string& feedback) override;
 
     /**
      * @brief Set the agent prompt for the agent
      * @param agent_prompt The agent prompt to set
      */
-    void setAgentPrompt(const String& agent_prompt);
+    void setAgentPrompt(const std::string& agent_prompt);
 
     /**
      * @brief Get the current agent prompt
      * @return The current agent prompt
      */
-    String getAgentPrompt() const;
+    std::string getAgentPrompt() const;
 
     /**
      * @brief Wait for feedback using coroutines
@@ -78,14 +78,14 @@ public:
      * @param context The context to wait for feedback
      * @return The feedback
      */
-    Task<String> waitForFeedback(const String& message, const JsonObject& context) override;
+    Task<std::string> waitForFeedback(const std::string& message, const JsonObject& context) override;
 
     /**
      * @brief Run the agent asynchronously with callback
      * @param task The task to run
      * @param callback Callback function to call with result
      */
-    void runAsync(const String& task, std::function<void(const JsonObject&)> callback);
+    void runAsync(const std::string& task, std::function<void(const JsonObject&)> callback);
 
 
 /*! @cond PRIVATE */
@@ -93,12 +93,12 @@ protected:
     /**
      * @brief Agent prompt
      */
-    String agent_prompt_;
+    std::string agent_prompt_;
 
     /**
      * @brief Feedback promise for simple feedback mechanism
      */
-    std::promise<String> feedback_promise_;
+    std::promise<std::string> feedback_promise_;
 
     /**
      * @brief Mutex for feedback promise
@@ -111,32 +111,32 @@ protected:
      * @param params The parameters of the tool used
      * @param result The result of the tool used
      */
-    virtual void onToolUsed(const String& tool_name, const JsonObject& params, const ToolResult& result);
+    virtual void onToolUsed(const std::string& tool_name, const JsonObject& params, const ToolResult& result);
 
     /**
      * @brief Callback for when the agent generates a response
      * @param response The response from the agent
      */
-    virtual void onResponse(const String& response);
+    virtual void onResponse(const std::string& response);
 
     /**
      * @brief Callback for when the agent errors
      * @param error The error message
      */
-    virtual void onError(const String& error);
+    virtual void onError(const std::string& error);
 
     /**
      * @brief Create the agent prompt with available tools
      * @return The agent prompt
      */
-    virtual String createAgentPrompt() const;
+    virtual std::string createAgentPrompt() const;
 
     /**
      * @brief Process a message with coroutines
      * @param message The message to process
      * @return The processed message
      */
-    Task<String> processMessage(const String& message);
+    Task<std::string> processMessage(const std::string& message);
 
 /*! @endcond */
 };

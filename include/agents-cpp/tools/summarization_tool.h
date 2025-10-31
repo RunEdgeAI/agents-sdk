@@ -45,7 +45,7 @@ protected:
      * @param text The text to validate
      * @return true if the text is valid, false otherwise
      */
-    bool validateText(const String& text) const;
+    bool validateText(const std::string& text) const;
 
     /**
      * @brief Validate the max_length parameter
@@ -60,7 +60,7 @@ protected:
      * @param max_length The maximum length of the summary
      * @return The formatted prompt
      */
-    String generatePrompt(const String& text, int max_length) const;
+    std::string generatePrompt(const std::string& text, int max_length) const;
 
     /**
      * @brief Format the summarization result
@@ -69,7 +69,7 @@ protected:
      * @param max_length The maximum length that was requested
      * @return ToolResult The formatted result of the summarization
      */
-    ToolResult formatSummarizationResult(const String& original_text, const String& summary, int max_length) const;
+    ToolResult formatSummarizationResult(const std::string& original_text, const std::string& summary, int max_length) const;
 
     /**
      * @brief The LLM interface to use

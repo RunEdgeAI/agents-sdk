@@ -45,7 +45,7 @@ public:
         /**
          * @brief Error logging level
          */
-        ERROR,
+        ERR,
         /**
          * @brief Critical logging level
          */

@@ -16,7 +16,7 @@ using namespace agents;
 
 int main(int argc, char* argv[]) {
     // Get API key from .env, environment, or command line
-    String api_key;
+    std::string api_key;
     auto& config = ConfigLoader::getInstance();
 
     // Try to get API key from config or environment
@@ -72,11 +72,11 @@ int main(int argc, char* argv[]) {
             "research",
             "You are a research assistant focused on gathering factual information. "
             "Present only verified facts and data, citing sources when possible.",
-            [](const String& input) -> String {
+            [](const std::string& input) -> std::string {
                 return "Research task: " + input +
                       "\nFocus on finding the most relevant facts and data points about this topic.";
             },
-            [](const String& output) -> JsonObject {
+            [](const std::string& output) -> JsonObject {
                 JsonObject result;
                 result["research"] = output;
                 return result;
@@ -87,11 +87,11 @@ int main(int argc, char* argv[]) {
             "analysis",
             "You are an analytical assistant that excels at critical thinking. "
             "Analyze information objectively, identifying patterns, trends, and insights.",
-            [](const String& input) -> String {
+            [](const std::string& input) -> std::string {
                 return "Analysis task: " + input +
                       "\nProvide a thoughtful analysis, including implications and significance.";
             },
-            [](const String& output) -> JsonObject {
+            [](const std::string& output) -> JsonObject {
                 JsonObject result;
                 result["analysis"] = output;
                 return result;
@@ -102,11 +102,11 @@ int main(int argc, char* argv[]) {
             "recommendations",
             "You are a recommendation assistant that provides practical advice. "
             "Suggest actionable steps based on the query.",
-            [](const String& input) -> String {
+            [](const std::string& input) -> std::string {
                 return "Recommendation task: " + input +
                       "\nProvide concrete, actionable recommendations related to this topic.";
             },
-            [](const String& output) -> JsonObject {
+            [](const std::string& output) -> JsonObject {
                 JsonObject result;
                 result["recommendations"] = output;
                 return result;
@@ -116,15 +116,15 @@ int main(int argc, char* argv[]) {
         // Set a custom aggregator for sectioning mode
         parallel.setAggregator([](const std::vector<JsonObject>& results) -> JsonObject {
             JsonObject combined;
-            String research, analysis, recommendations;
+            std::string research, analysis, recommendations;
 
             for (const auto& result : results) {
                 if (result.contains("research")) {
-                    research = result["research"].get<String>();
+                    research = result["research"].get<std::string>();
                 } else if (result.contains("analysis")) {
-                    analysis = result["analysis"].get<String>();
+                    analysis = result["analysis"].get<std::string>();
                 } else if (result.contains("recommendations")) {
-                    recommendations = result["recommendations"].get<String>();
+                    recommendations = result["recommendations"].get<std::string>();
                 }
             }
 
@@ -137,16 +137,16 @@ int main(int argc, char* argv[]) {
         });
     } else {
         // VOTING mode - multiple identical tasks with different parameters
-        constexpr uint numVotingAgents = 5u;
-        for (uint i = 0; i < numVotingAgents; i++) {
+        constexpr uint32_t numVotingAgents = 5u;
+        for (uint32_t i = 0; i < numVotingAgents; i++) {
             parallel.addTask(
                 "agent_" + std::to_string(i+1),
                 "You are assistant " + std::to_string(i+1) + ". "
                 "Provide your best answer to the query, thinking independently.",
-                [i](const String& input) -> String {
+                [i](const std::string& input) -> std::string {
                     return "Task for agent " + std::to_string(i+1) + ": " + input;
                 },
-                [](const String& output) -> JsonObject {
+                [](const std::string& output) -> JsonObject {
                     JsonObject result;
                     result["response"] = output;
                     return result;
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
 
     // Process user inputs until exit
     std::cout << "Enter queries (or 'exit' to quit):" << std::endl;
-    String user_input;
+    std::string user_input;
     while (true) {
         std::cout << "> ";
         std::getline(std::cin, user_input);
@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
             JsonObject result = parallel.run(user_input);
 
             // Display the result
-            std::cout << "\nResult:\n" << result["answer"].get<String>() << std::endl;
+            std::cout << "\nResult:\n" << result["answer"].get<std::string>() << std::endl;
             std::cout << "--------------------------------------" << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;

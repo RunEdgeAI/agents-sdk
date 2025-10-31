@@ -36,15 +36,15 @@ public:
         /**
          * @brief The name of the worker
          */
-        String name;
+        std::string name;
         /**
          * @brief The description of the worker
          */
-        String description;
+        std::string description;
         /**
          * @brief The prompt template of the worker
          */
-        String prompt_template;
+        std::string prompt_template;
         /**
          * @brief The llm of the worker
          */
@@ -52,7 +52,7 @@ public:
         /**
          * @brief The handler of the worker
          */
-        std::function<JsonObject(const String&, const JsonObject&)> handler;
+        std::function<JsonObject(const std::string&, const JsonObject&)> handler;
 
         /**
          * @brief Constructor
@@ -63,11 +63,11 @@ public:
          * @param handler The handler of the worker
          */
         Worker(
-            const String& name,
-            const String& description,
-            const String& prompt_template,
+            const std::string& name,
+            const std::string& description,
+            const std::string& prompt_template,
             std::shared_ptr<LLMInterface> llm = nullptr,
-            std::function<JsonObject(const String&, const JsonObject&)> handler = nullptr
+            std::function<JsonObject(const std::string&, const JsonObject&)> handler = nullptr
         ) : name(name), description(description),
             prompt_template(prompt_template), llm(llm), handler(handler) {}
     };
@@ -79,7 +79,7 @@ public:
      */
     OrchestratorWorkflow(
         std::shared_ptr<Context> context,
-        const String& orchestrator_prompt_template = ""
+        const std::string& orchestrator_prompt_template = ""
     );
 
     /**
@@ -96,9 +96,9 @@ public:
      * @param worker_llm The llm of the worker
      */
     void addWorker(
-        const String& name,
-        const String& description,
-        const String& prompt_template,
+        const std::string& name,
+        const std::string& description,
+        const std::string& prompt_template,
         std::shared_ptr<LLMInterface> worker_llm = nullptr
     );
 
@@ -112,7 +112,7 @@ public:
      * @param input The input to the workflow
      * @return The output of the workflow
      */
-    JsonObject run(const String& input) override;
+    JsonObject run(const std::string& input) override;
 
     /**
      * @brief Set the max number of iterations
@@ -130,7 +130,7 @@ public:
      * @brief Set the orchestrator prompt template
      * @param orchestrator_prompt_template The orchestrator prompt template
      */
-    void setOrchestratorPrompt(const String& orchestrator_prompt_template);
+    void setOrchestratorPrompt(const std::string& orchestrator_prompt_template);
 
     /**
      * @brief Get the schema for available workers
@@ -142,7 +142,7 @@ private:
     /**
      * @brief Orchestrator prompt template
      */
-    String orchestrator_prompt_template_;
+    std::string orchestrator_prompt_template_;
 
     /**
      * @brief List of available workers
@@ -157,7 +157,7 @@ private:
     /**
      * @brief Map of registered workers by name for quick lookup
      */
-    std::map<String, Worker> worker_map_;
+    std::map<std::string, Worker> worker_map_;
 
     /**
      * @brief Max number of iterations
@@ -173,14 +173,14 @@ private:
      * @brief Create the orchestrator system prompt with worker descriptions
      * @return The orchestrator system prompt
      */
-    String createOrchestratorSystemPrompt() const;
+    std::string createOrchestratorSystemPrompt() const;
 
     /**
      * @brief Execute a worker by name
      */
     JsonObject executeWorker(
-        const String& worker_name,
-        const String& task,
+        const std::string& worker_name,
+        const std::string& task,
         const JsonObject& context_data
     );
 };
